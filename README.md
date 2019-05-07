@@ -10,7 +10,7 @@ https://portal.azure.com/
 - Azure Cloud Shell でサンプルリポジトリをクローンする
 
 ```bash
-git clone https://github.com/softoika/decode2019
+git clone https://github.com/softoika/decode2019-k8s-handson
 ```
 
 サンプルリポジトリへ移動
@@ -22,19 +22,19 @@ cd decode2019
 リソースグループを作成する
 
 ```
-az group create --name decode2019 --location japaneast
+az group create --name decode2019-cd65-71 --location japaneast
 ```
 
 リソースグループ上に Kubernetes クラスターを作成する
 
 ```bash
-az aks create --resource-group decode2019 --name k8s-handson --node-count 1 --generate-ssh-keys
+az aks create --resource-group decode2019-cd65-71 --name k8s-handson --node-count 1 --generate-ssh-keys
 ```
 
 Kubernetes クラスターに接続するための認証情報を取得する
 
 ```bash
-az aks get-credentials --name k8s-handson --resource-group decode2019
+az aks get-credentials --name k8s-handson --resource-group decode2019-cd65-71
 ```
 
 ## Pod を作成してみる
@@ -322,5 +322,5 @@ EXTERNAL-IPが実IPになったら、ブラウザでアクセスしてみまし�
 従量課金の場合、ノードが起動している間はお金がかかり続けます。  
 以下のコマンドを実行してこのハンズオンのリソースグループごと消してしまいましょう。
 ```bash
-az group delete --name decode2019 --yes --no-wait
+az group delete --name decode2019-cd65-71 --yes --no-wait
 ```
