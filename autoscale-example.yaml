@@ -1,0 +1,35 @@
+## HorizontalAutoscalerの設定
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: autoscale-example
+spec:
+  # レプリカ数の下限
+  minReplicas: 2
+  # レプリカ数の上限
+  maxReplicas: 5
+  # PodのCPUが70%になるように調節する
+  targetCPUUtilizationPercentage: 70
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: autoscalable-deployment
+---
+## 対象のDeploymentの設定
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autoscalable-deployment
+spec:
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:1.12
+

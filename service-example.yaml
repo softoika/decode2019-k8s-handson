@@ -1,0 +1,38 @@
+## シンプルなServiceの定義
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-example
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: "TCP"
+      # 8080番ポートに受けて各Podの80番ポートに転送する
+      port: 8080
+      targetPort: 80
+  selector:
+    # Deploymentと同じラベルをつける
+    app: example
+---
+## Serviceに対応したDeploymentを定義
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-example-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:1.12
+          # コンテナのポートを指定
+          ports:
+            - containerPort: 80
+
