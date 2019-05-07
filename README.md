@@ -3,7 +3,7 @@
 ## ハンズオンを進めるための準備
 
 - 手順書をダウンロードする
-https://github.com/softoika/decode2019
+https://github.com/softoika/decode2019-k8s-handson
 - Azure ポータルを開く  
 https://portal.azure.com/
 - Azure Cloud Shell を開く(Bash を選択)
