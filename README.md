@@ -16,7 +16,7 @@ git clone https://github.com/softoika/decode2019-k8s-handson
 サンプルリポジトリへ移動
 
 ```bash
-cd decode2019
+cd decode2019-k8s-handson
 ```
 
 リソースグループを作成する
