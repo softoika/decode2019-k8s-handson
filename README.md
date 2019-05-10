@@ -30,6 +30,10 @@ az group create --name decode2019-cd65-71 --location japaneast
 ```bash
 az aks create --resource-group decode2019-cd65-71 --name k8s-handson --node-count 1 --generate-ssh-keys
 ```
+作成にはしばらく時間がかかる。以下のコマンドでステータスが`Succeeded`になるまで待つ (Ctrl+Cで終了)
+```
+watch "az aks show -g decode2019-cd65-71 -n k8s-handson | grep provisioningState"
+```
 
 Kubernetes クラスターに接続するための認証情報を取得する
 
