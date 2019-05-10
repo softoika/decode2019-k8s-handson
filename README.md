@@ -3,7 +3,7 @@
 ## ハンズオンを進めるための準備
 
 - ブラウザから手順書(このリポジトリ)を開く  
-https://git.io/fjCBc
+https://git.io/fjCRU
 - Azure ポータルを開く  
 https://portal.azure.com/
 - Azure Cloud Shell を開く(Bash を選択)
