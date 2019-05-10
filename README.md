@@ -77,6 +77,9 @@ kubectl apply -f pod-example.yaml
 kubectl get pods
 ```
 
+<img width="424" alt="kubectl_get_pods" src="https://user-images.githubusercontent.com/25437304/57520904-d091a400-7359-11e9-81f4-98d1413a0e8c.png">
+
+
 STATUS が Running になったら起動成功  
 
 ## ReplicaSet を作成してみる
@@ -121,16 +124,24 @@ kubectl apply -f replicaset-example.yaml
 ```bash
 kubectl get replicaset -o wide
 ```
+
+<img width="698" alt="kubectl_get_replicaset_-o_wide" src="https://user-images.githubusercontent.com/25437304/57520960-f3bc5380-7359-11e9-85bc-386e187179f6.png">
+
 Podそれぞれがハッシュ付きの名前で異なるIPアドレスで起動されている
 ```bash
 kubectl get pods -o wide
 ```
+
+<img width="851" alt="kubectl_get_pods_-o_wide" src="https://user-images.githubusercontent.com/25437304/57520993-09ca1400-735a-11e9-9eb5-eb1563daa5b4.png">
+
 ### ReplicaSetのセルフヒーリングを試してみる
 ReplicaSetを組んでいればPodに障害が起きて停止しても、すぐにPodが再作成されていることがわかる。  
 以下のシェルスクリプトを実行すると、Podの削除前と削除後でPodの数が変わっていないことがわかる。
 ```
 ./self-healing-demo.sh
 ```
+
+<img width="473" alt="self-healing-demo sh" src="https://user-images.githubusercontent.com/25437304/57521023-1d757a80-735a-11e9-9310-820067c34265.png">
 
 ## Deployment を作成してみる
 DeploymentはReplicaSetをスケーラブルに扱うためのリソース。  
@@ -321,6 +332,9 @@ ServiceのEXTERNAL-IPが<Pendding>から特定のIPアドレスになるまで�
 ```bash
 kubectl get services --watch
 ```
+
+<img width="528" alt="kubectl_get_services_--watch" src="https://user-images.githubusercontent.com/25437304/57521051-33833b00-735a-11e9-862e-5d9e82168638.png">
+
 EXTERNAL-IPが実IPになったら、ブラウザでアクセスしてみましょう。(`http://<EXTERNAL-IP>:8080`でアクセスできます。)
 
 ## 後片付け
