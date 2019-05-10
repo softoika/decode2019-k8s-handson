@@ -6,10 +6,10 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - protocol: "TCP"
-      # 8080番ポートに受けて各Podの80番ポートに転送する
-      port: 8080
-      targetPort: 80
+  - protocol: "TCP"
+    # 8080番ポートに受けて各Podの80番ポートに転送する
+    port: 8080
+    targetPort: 80
   selector:
     # Deploymentと同じラベルをつける
     app: example
@@ -30,9 +30,9 @@ spec:
         app: example
     spec:
       containers:
-        - name: nginx-container
-          image: nginx:1.12
-          # コンテナのポートを指定
-          ports:
-            - containerPort: 80
+      - name: nginx-container
+        image: nginx:1.12
+        # コンテナのポートを指定
+        ports:
+        - containerPort: 80
 

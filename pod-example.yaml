@@ -1,0 +1,11 @@
+# /api/v1/namespaces/{namespace}/pods にリクエストを投げる
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-example
+spec:
+  containers:
+  - name: nginx-container
+    # コンテナイメージを指定
+    image: nginx:1.12
+

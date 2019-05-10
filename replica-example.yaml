@@ -1,3 +1,4 @@
+# /apis/apps/v1/namespaces/{namespace}/replicasets にリクエストを投げる
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
