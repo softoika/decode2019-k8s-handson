@@ -2,7 +2,7 @@
 
 ## ハンズオンを進めるための準備
 
-- 手順書をダウンロードする
+- 手順書を開く  
 https://github.com/softoika/decode2019-k8s-handson
 - Azure ポータルを開く  
 https://portal.azure.com/
