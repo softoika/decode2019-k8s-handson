@@ -51,10 +51,10 @@ Pod のマニフェストファイルの単純な例は以下の通りです。
 apiVersion: v1
 kind: Pod
 metadata:
-name: pod-example
+  name: pod-example
 spec:
-containers:
-- name: nginx-container
+  containers:
+  - name: nginx-container
     # コンテナイメージを指定
     image: nginx:1.12
 ```
@@ -89,21 +89,21 @@ ReplicaSet はその名の通り、Pod のレプリケーションを組んで�
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-name: replicaset-example
+  name: replicaset-example
 spec:
-replicas: 3
-selector:
-# labelに一致するPodでレプリカを組む
-matchLabels:
-    app: example
-template:
-# template以下がPodとほとんど同じ
-metadata:
-    labels:
-    app: example
-spec:
-    containers:
-    - name: nginx-container
+  replicas: 3
+  selector:
+    # labelに一致するPodでレプリカを組む
+      matchLabels:
+        app: example
+  template:
+    # template以下がPodとほとんど同じ
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+      - name: nginx-container
         image: nginx:1.12
 ```
 
@@ -138,20 +138,21 @@ DeploymentはReplicaSetをスケーラブルに扱うためのリソース。
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: simple-deployment
+  name: simple-deployment
 spec:
-replicas: 3
-selector:
-matchLabels:
+  replicas: 3
+  selector:
+  matchLabels:
     app: example
-template:
-metadata:
-    labels:
-    app: example
-spec:
-    containers:
-    - name: nginx-container
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+      - name: nginx-container
         image: nginx:1.12
+    
 ```
 
 </details>
@@ -170,29 +171,29 @@ Deploymentでは基本的にローリングアップデートでアプリケー�
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: rolling-update-deployment
+  name: rolling-update-deployment
 spec:
-## ローリングアップデートの設定 ##
-# 新規作成されたPodがReadyになってから起動成功と判断するまでの猶予時間
-minReadySeconds: 3
-strategy:
-type: RollingUpdate
-rollingUpdate:
-    # 1台ずつ更新していく
-    maxSurge: 1
-    maxUnavailable: 0
-##############################
-replicas: 3
-selector:
-matchLabels:
+  ## ローリングアップデートの設定 ##
+  # 新規作成されたPodがReadyになってから起動成功と判断するまでの猶予時間
+  minReadySeconds: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # 1台ずつ更新していく
+      maxSurge: 1
+      maxUnavailable: 0
+  ##############################
+  replicas: 3
+  selector:
+  matchLabels:
     app: example
-template:
-metadata:
-    labels:
-    app: example
-spec:
-    containers:
-    - name: nginx-container
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+      - name: nginx-container
         image: nginx:1.12
 ```
 
@@ -225,35 +226,35 @@ watch kubectl get replicaset
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-name: autoscale-example
+  name: autoscale-example
 spec:
-# レプリカ数の下限
-minReplicas: 2
-# レプリカ数の上限
-maxReplicas: 5
-# PodのCPUが70%になるように調節する
-targetCPUUtilizationPercentage: 70
-scaleTargetRef:
-apiVersion: apps/v1
-kind: Deployment
-name: autoscalable-deployment
+  # レプリカ数の下限
+  minReplicas: 2
+  # レプリカ数の上限
+  maxReplicas: 5
+  # PodのCPUが70%になるように調節する
+  targetCPUUtilizationPercentage: 70
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: autoscalable-deployment
 ---
 ## 対象のDeploymentの設定
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: autoscalable-deployment
+  name: autoscalable-deployment
 spec:
-selector:
-matchLabels:
-    app: example
-template:
-metadata:
-    labels:
-    app: example
-spec:
-    containers:
-    - name: nginx-container
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+      - name: nginx-container
         image: nginx:1.12
 
 ```
@@ -271,35 +272,35 @@ Kubernetes上のアプリケーションを外部に公開するにはService (�
 apiVersion: v1
 kind: Service
 metadata:
-name: service-example
+  name: service-example
 spec:
-type: LoadBalancer
-ports:
-- protocol: "TCP"
+  type: LoadBalancer
+  ports:
+  - protocol: "TCP"
     # 8080番ポートに受けて各Podの80番ポートに転送する
     port: 8080
     targetPort: 80
-selector:
-# Deploymentと同じラベルをつける
-app: example
+  selector:
+  # Deploymentと同じラベルをつける
+    app: example
 ---
 ## Serviceに対応したDeploymentを定義
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: service-example-deployment
+  name: service-example-deployment
 spec:
-replicas: 3
-selector:
-matchLabels:
-    app: example
-template:
-metadata:
-    labels:
-    app: example
-spec:
-    containers:
-    - name: nginx-container
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+      - name: nginx-container
         image: nginx:1.12
         # コンテナのポートを指定
         ports:
