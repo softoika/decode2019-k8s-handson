@@ -115,7 +115,7 @@ spec:
   
 適用
 ```bash
-kubeclt apply -f replicaset-example.yaml
+kubec apply -f replicaset-example.yaml
 ```
 レプリカ数3台でReplicaSetが起動されていることを確認
 ```bash
