@@ -315,11 +315,11 @@ spec:
 
 適用
 ```bash
-kubeclt apply -f service-example.yaml
+kubectl apply -f service-example.yaml
 ```
 ServiceのEXTERNAL-IPが<Pendding>から特定のIPアドレスになるまで待ちます(`Ctrl + C`で終了)
 ```bash
-kubeclt get services --watch
+kubectl get services --watch
 ```
 EXTERNAL-IPが実IPになったら、ブラウザでアクセスしてみましょう。(`http://<EXTERNAL-IP>:8080`でアクセスできます。)
 
