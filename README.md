@@ -3,7 +3,7 @@
 ## ハンズオンを進めるための準備
 
 - ブラウザから手順書(このリポジトリ)を開く  
-https://git.io/fjCBc
+https://git.io/fjCRU
 - Azure ポータルを開く  
 https://portal.azure.com/
 - Azure Cloud Shell を開く(Bash を選択)
@@ -29,6 +29,10 @@ az group create --name decode2019-cd65-71 --location japaneast
 
 ```bash
 az aks create --resource-group decode2019-cd65-71 --name k8s-handson --node-count 1 --generate-ssh-keys
+```
+作成にはしばらく時間がかかる。以下のコマンドでステータスが`Succeeded`になるまで待つ (Ctrl+Cで終了)
+```
+watch "az aks show -g decode2019-cd65-71 -n k8s-handson | grep provisioningState"
 ```
 
 Kubernetes クラスターに接続するための認証情報を取得する
@@ -111,7 +115,7 @@ spec:
   
 適用
 ```bash
-kubeclt apply -f replicaset-example.yaml
+kubectl apply -f replicaset-example.yaml
 ```
 レプリカ数3台でReplicaSetが起動されていることを確認
 ```bash
