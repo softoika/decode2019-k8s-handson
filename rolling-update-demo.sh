@@ -6,7 +6,7 @@ kubectl apply -f rolling-update-deployment.yaml
 echo
 
 # コンテナイメージを変更
-kubectl set image deployment rolling-update-deployment nginx-container=nginx:1.13
+kubectl set image deployment rolling-update-deployment hello-app-container=rhanafusa/hello-app:1.1
 
 echo
 

@@ -16,13 +16,13 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: example
+      app: hello-app
   template:
     metadata:
       labels:
-        app: example
+        app: hello-app
     spec:
       containers:
-        - name: nginx-container
-          image: nginx:1.12
+        - name: hello-app-container
+          image: rhanafusa/hello-app:1.0
 

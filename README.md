@@ -1,11 +1,15 @@
-# k8s ハンズオン手順書
+# Kubernetes ハンズオン手順書
+
+Kubernetes とはどのようなものかステップバイステップで実際に手を動かしながら見ていきます。  
+このハンズオンでは Kubernetes の最小単位である Pod から見ていき、最終的に Deployment と LoadBalancer Service を使ったアプリケーションのデプロイを体験します。  
+また、Kubernetes クラスター上のノードを起動している間お金がかかり続けますので、**最後の「後片付け」のステップは必ず実行してください。**
 
 ## ハンズオンを進めるための準備
 
 - ブラウザから手順書(このリポジトリ)を開く  
-https://git.io/fjCRU
+  https://git.io/fjCRU
 - Azure ポータルを開く  
-https://portal.azure.com/
+  https://portal.azure.com/
 - Azure Cloud Shell を開く(Bash を選択)
 - Azure Cloud Shell でサンプルリポジトリをクローンする
 
@@ -21,7 +25,7 @@ cd decode2019-k8s-handson
 
 リソースグループを作成する
 
-```
+```bash
 az group create --name decode2019-cd65-71 --location japaneast
 ```
 
@@ -30,7 +34,9 @@ az group create --name decode2019-cd65-71 --location japaneast
 ```bash
 az aks create --resource-group decode2019-cd65-71 --name k8s-handson --node-count 1 --generate-ssh-keys
 ```
-作成にはしばらく時間がかかる。以下のコマンドでステータスが`Succeeded`になるまで待つ (Ctrl+Cで終了)
+
+作成にはしばらく時間がかかる。以下のコマンドでステータスが`Succeeded`になるまで待つ (Ctrl+C で終了)
+
 ```
 watch "az aks show -g decode2019-cd65-71 -n k8s-handson | grep provisioningState"
 ```
@@ -44,7 +50,7 @@ az aks get-credentials --name k8s-handson --resource-group decode2019-cd65-71
 ## Pod を作成してみる
 
 Pod は Kubernetes における最小単位の環境です。  
-Pod は 1 つ以上のコンテナを動かす環境で、複数のコンテナを動かす場合同じ Pod 内であれば コンテナはlocalhost で互いに通信することができます。  
+Pod は 1 つ以上のコンテナを動かす環境で、複数のコンテナを動かす場合同じ Pod 内であれば コンテナは localhost で互いに通信することができます。  
 Pod のマニフェストファイルの単純な例は以下の通りです。
 
 <details>
@@ -58,9 +64,9 @@ metadata:
   name: pod-example
 spec:
   containers:
-  - name: nginx-container
-    # コンテナイメージを指定
-    image: nginx:1.12
+    - name: hello-app-container
+      # コンテナイメージを指定
+      image: rhanafusa/hello-app:1.0
 ```
 
 </details>
@@ -79,14 +85,12 @@ kubectl get pods
 
 <img width="424" alt="kubectl_get_pods" src="https://user-images.githubusercontent.com/25437304/57520904-d091a400-7359-11e9-81f4-98d1413a0e8c.png">
 
-
-STATUS が Running になったら起動成功  
+STATUS が Running になったら起動成功
 
 ## ReplicaSet を作成してみる
 
 ReplicaSet はその名の通り、Pod のレプリケーションを組んで可用性を高めることができます。  
 以下は 3 つのレプリカで構成された ReplicaSet の例です。
-
 
 <details>
 <summary><b>replicaset-example.yaml</b></summary>
@@ -100,18 +104,18 @@ metadata:
 spec:
   replicas: 3
   selector:
-    # labelに一致するPodでレプリカを組む
-      matchLabels:
-        app: example
+    # labelの検索条件
+    matchLabels:
+      app: hello-app
   template:
     # template以下がPodとほとんど同じ
     metadata:
       labels:
-        app: example
+        app: hello-app
     spec:
       containers:
-      - name: nginx-container
-        image: nginx:1.12
+        - name: hello-app-container
+          image: rhanafusa/hello-app:1.0
 ```
 
 </details>
@@ -127,16 +131,19 @@ kubectl get replicaset -o wide
 
 <img width="698" alt="kubectl_get_replicaset_-o_wide" src="https://user-images.githubusercontent.com/25437304/57520960-f3bc5380-7359-11e9-85bc-386e187179f6.png">
 
-Podそれぞれがハッシュ付きの名前で異なるIPアドレスで起動されている
+Pod それぞれがハッシュ付きの名前で異なる IP アドレスで起動されている
+
 ```bash
 kubectl get pods -o wide
 ```
 
 <img width="851" alt="kubectl_get_pods_-o_wide" src="https://user-images.githubusercontent.com/25437304/57520993-09ca1400-735a-11e9-9eb5-eb1563daa5b4.png">
 
-### ReplicaSetのセルフヒーリングを試してみる
-ReplicaSetを組んでいればPodに障害が起きて停止しても、すぐにPodが再作成されていることがわかる。  
-以下のシェルスクリプトを実行すると、Podの削除前と削除後でPodの数が変わっていないことがわかる。
+### ReplicaSet のセルフヒーリングを試してみる
+
+ReplicaSet を組んでいれば Pod に障害が起きて停止しても、すぐに Pod が再作成されていることがわかる。  
+以下のシェルスクリプトを実行すると、Pod の削除前と削除後で Pod の数が変わっていないことがわかる。
+
 ```
 ./self-healing-demo.sh
 ```
@@ -144,7 +151,8 @@ ReplicaSetを組んでいればPodに障害が起きて停止しても、すぐ�
 <img width="473" alt="self-healing-demo sh" src="https://user-images.githubusercontent.com/25437304/57521023-1d757a80-735a-11e9-9310-820067c34265.png">
 
 ## Deployment を作成してみる
-DeploymentはReplicaSetをスケーラブルに扱うためのリソース。  
+
+Deployment は ReplicaSet をスケーラブルに扱うためのリソース。
 
 <details>
 <summary><b>simple-deployment.yaml</b></summary>
@@ -158,25 +166,25 @@ spec:
   replicas: 3
   selector:
   matchLabels:
-    app: example
+    app: hello-app
   template:
     metadata:
       labels:
-        app: example
+        app: hello-app
     spec:
       containers:
-      - name: nginx-container
-        image: nginx:1.12
-    
+        - name: hello-app-container
+          image: rhanafusa/hello-app:1.0
 ```
 
 </details>
 
-Deploymentはアプリケーションを更新するときに、後述のローリングアップデートやオートスケーリングなどのデプロイに関する設定を記述することができる。  
-よって、DeploymentのマニフェストはReplicaSetやPodのマニフェストを上記のように個別に書くということは基本的にはありません。
+Deployment はアプリケーションを更新するときに、後述のローリングアップデートやオートスケーリングなどのデプロイに関する設定を記述することができる。  
+よって、Deployment のマニフェストは ReplicaSet や Pod のマニフェストを上記のように個別に書くということは基本的にはありません。
 
-### Deploymentのローリングアップデートを試してみる
-Deploymentでは基本的にローリングアップデートでアプリケーションが順次更新されるため、ダウンタイムなしにアプリケーションを更新することができます。
+### Deployment のローリングアップデートを試してみる
+
+Deployment では基本的にローリングアップデートでアプリケーションが順次更新されるため、ダウンタイムなしにアプリケーションを更新することができます。
 ローリングアップデートのデモ用マニフェストは以下の通りです。
 
 <details>
@@ -201,37 +209,42 @@ spec:
   replicas: 3
   selector:
   matchLabels:
-    app: example
+    app: hello-app
   template:
     metadata:
       labels:
-        app: example
+        app: hello-app
     spec:
       containers:
-      - name: nginx-container
-        image: nginx:1.12
+        - name: hello-app-container
+          image: rhanafusa/hello-app:1.0
 ```
 
 </details>
 
 それではローリングアップデートを体験してみましょう。  
 以下のシェルスクリプトを実行してローリングアップデートされていく様子を確認することができます。
+
 ```bash
 ./rolling-update-demo.sh
 ```
+
 `Ctrl + C`でスクリプトを終了できます。  
 シェルスクリプトの内容を一部抜粋すると以下のようになっています。
+
 ```bash
 # Deploymentを作成
 kubectl apply -f rolling-update-deployment.yaml
 # コンテナイメージを変更
-kubectl set image deployment rolling-update-deployment nginx-container=nginx:1.13
+kubectl set image deployment rolling-update-deployment hello-app-container=rhanafusa/hello-app:1.1
+
 # 新しいReplicaSetが作成されて順次Podが更新されていることを確認
-watch kubectl get replicaset 
+watch kubectl get replicaset
 ```
 
-### Podのオートスケーリングを有効にしてみる
-レプリカの数は手動で変更することもできますが、以下のようにマニフェストを設定することでPodの負荷状況に応じて自動でスケールアウトすることができます。
+### Pod のオートスケーリングを有効にしてみる
+
+レプリカの数は手動で変更することもできますが、以下のようにマニフェストを設定することで Pod の負荷状況に応じて自動でスケールアウトすることができます。
 
 <details>
 <summary><b>autoscale-example.yaml</b></summary>
@@ -262,22 +275,23 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: example
+      app: hello-app
   template:
     metadata:
       labels:
-        app: example
+        app: hello-app
     spec:
       containers:
-      - name: nginx-container
-        image: nginx:1.12
-
+        - name: hello-app-container
+          image: rhanafusa/hello-app:1.0
 ```
+
 </details>
 
 ## Service を作成してみる
-Kubernetes上のアプリケーションを外部に公開するにはService (もしくはIngress) というリソースを使います。  
-以下は負荷分散のためのシンプルなロードバランサーのServiceの例です。
+
+Kubernetes 上のアプリケーションを外部に公開するには Service (もしくは Ingress) というリソースを使います。  
+以下は負荷分散のためのシンプルなロードバランサーの Service の例です。
 
 <details>
 <summary><b>service-example.yaml</b></summary>
@@ -291,13 +305,13 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - protocol: "TCP"
-    # 8080番ポートに受けて各Podの80番ポートに転送する
-    port: 8080
-    targetPort: 80
+    - protocol: "TCP"
+      # 8080番ポートに受けて各Podの8080番ポートに転送する
+      port: 8080
+      targetPort: 8080
   selector:
-  # Deploymentと同じラベルをつける
-    app: example
+    # Deploymentと同じラベルをつける
+    app: hello-app
 ---
 ## Serviceに対応したDeploymentを定義
 apiVersion: apps/v1
@@ -308,38 +322,51 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: example
+      app: hello-app
   template:
     metadata:
       labels:
-        app: example
+        app: hello-app
     spec:
       containers:
-      - name: nginx-container
-        image: nginx:1.12
-        # コンテナのポートを指定
-        ports:
-        - containerPort: 80
+        - name: hello-app-container
+          image: rhanafusa/hello-app:1.0
+          # コンテナのポートを指定
+          ports:
+            - containerPort: 8080
 ```
 
 </details>
 
 適用
+
 ```bash
 kubectl apply -f service-example.yaml
 ```
-ServiceのEXTERNAL-IPが<Pendding>から特定のIPアドレスになるまで待ちます(`Ctrl + C`で終了)
+
+Service の EXTERNAL-IP が<Pendding>から特定の IP アドレスになるまで待ちます(`Ctrl + C`で終了)
+
 ```bash
 kubectl get services --watch
 ```
 
 <img width="528" alt="kubectl_get_services_--watch" src="https://user-images.githubusercontent.com/25437304/57521051-33833b00-735a-11e9-862e-5d9e82168638.png">
 
-EXTERNAL-IPが実IPになったら、ブラウザでアクセスしてみましょう。(`http://<EXTERNAL-IP>:8080`でアクセスできます。)
+EXTERNAL-IP が実 IP になったら、ブラウザでアクセスしてみましょう。(`http://<EXTERNAL-IP>:8080`でアクセスできます。)
 
 ## 後片付け
+
 従量課金の場合、ノードが起動している間はお金がかかり続けます。  
-以下のコマンドを実行してこのハンズオンのリソースグループごと消してしまいましょう。
+以下のコマンドを実行して(もしくは Azure Portal の画面上から)、このハンズオンのリソースグループごと消してしまいましょう。
+
 ```bash
 az group delete --name decode2019-cd65-71 --yes --no-wait
+```
+
+今回 Azure Cloud Shell を初めて使った場合 Cloud Shell 用のストレージとリソースグループも作成されています。  
+僅かではありますが、起動している間お金がかかります。  
+こちらも普段使っていないのであれば削除しておきましょう。
+
+```bash
+az group delete --name cloud-shell-storage-southeastasia --yes --no-wait
 ```

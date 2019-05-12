@@ -5,7 +5,7 @@ metadata:
   name: pod-example
 spec:
   containers:
-  - name: nginx-container
+  - name: hello-app-container
     # コンテナイメージを指定
-    image: nginx:1.12
+    image: rhanafusa/hello-app:1.0
 
