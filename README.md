@@ -129,7 +129,8 @@ kubectl apply -f replicaset-example.yaml
 kubectl get replicaset -o wide
 ```
 
-<img width="698" alt="kubectl_get_replicaset_-o_wide" src="https://user-images.githubusercontent.com/25437304/57520960-f3bc5380-7359-11e9-85bc-386e187179f6.png">
+<img width="1115" alt="スクリーンショット 2019-05-13 18 59 49" src="https://user-images.githubusercontent.com/25437304/57613233-565b5c80-75b1-11e9-944e-e7a8fe1770a4.png">
+
 
 Pod それぞれがハッシュ付きの名前で異なる IP アドレスで起動されている
 
