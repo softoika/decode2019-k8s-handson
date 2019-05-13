@@ -6,7 +6,7 @@
 [DataDog公式サイト](https://www.datadoghq.com/)からトライアルアカウントを作成します。  
 以下の画面が表示されるので`Kubernetes`を選択して表示されている手順の通りDatadog Agentを作成します。
 
-<img width="1440" alt="スクリーンショット 2019-05-13 13 01 45" src="https://user-images.githubusercontent.com/25437304/57611035-f06cd600-75ac-11e9-8bb1-d8483394065b.png">
+<img width="1440" alt="スクリーンショット 2019-05-13 13 01 45" src="https://user-images.githubusercontent.com/25437304/57612657-32e3e200-75b0-11e9-9bc3-f27d3215d7e6.png">
 
 ```bash
 # Datadog AgentがKubernetes監視に必要なロールベースアクセス制御(RBAC)、RBACの権限を設定するServiceAccount、ClusterRoleBindingを作成する
