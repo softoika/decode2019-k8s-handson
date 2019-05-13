@@ -53,8 +53,7 @@ Pod は Kubernetes における最小単位の環境です。
 Pod は 1 つ以上のコンテナを動かす環境で、複数のコンテナを動かす場合同じ Pod 内であれば コンテナは localhost で互いに通信することができます。  
 Pod のマニフェストファイルの単純な例は以下の通りです。
 
-<details>
-<summary><b>pod-example.yaml</b></summary>
+<b>pod-example.yaml</b>
 
 ```yaml
 # /api/v1/namespaces/{namespace}/pods にリクエストを投げる
@@ -68,8 +67,6 @@ spec:
       # コンテナイメージを指定
       image: rhanafusa/hello-app:1.0
 ```
-
-</details>
 
 マニフェストファイルの適用は`kubectl apply`コマンドを使います。
 
@@ -92,8 +89,7 @@ STATUS が Running になったら起動成功
 ReplicaSet はその名の通り、Pod のレプリケーションを組んで可用性を高めることができます。  
 以下は 3 つのレプリカで構成された ReplicaSet の例です。
 
-<details>
-<summary><b>replicaset-example.yaml</b></summary>
+<b>replicaset-example.yaml</b>
 
 ```yaml
 # /apis/apps/v1/namespaces/{namespace}/replicasets にリクエストを投げる
@@ -118,19 +114,19 @@ spec:
           image: rhanafusa/hello-app:1.0
 ```
 
-</details>
-  
 適用
+
 ```bash
 kubectl apply -f replicaset-example.yaml
 ```
-レプリカ数3台でReplicaSetが起動されていることを確認
+
+レプリカ数 3 台で ReplicaSet が起動されていることを確認
+
 ```bash
 kubectl get replicaset -o wide
 ```
 
 <img width="1115" alt="スクリーンショット 2019-05-13 18 59 49" src="https://user-images.githubusercontent.com/25437304/57613233-565b5c80-75b1-11e9-944e-e7a8fe1770a4.png">
-
 
 Pod それぞれがハッシュ付きの名前で異なる IP アドレスで起動されている
 
@@ -155,8 +151,7 @@ ReplicaSet を組んでいれば Pod に障害が起きて停止しても、す�
 
 Deployment は ReplicaSet をスケーラブルに扱うためのリソース。
 
-<details>
-<summary><b>simple-deployment.yaml</b></summary>
+<b>simple-deployment.yaml</b>
 
 ```yaml
 apiVersion: apps/v1
@@ -178,8 +173,6 @@ spec:
           image: rhanafusa/hello-app:1.0
 ```
 
-</details>
-
 Deployment はアプリケーションを更新するときに、後述のローリングアップデートやオートスケーリングなどのデプロイに関する設定を記述することができる。  
 よって、**基本的には Pod や ReplicaSet は Deployment を通して定義すればよいです(Deployment のマニフェストファイルだけ作れば OK)。**
 
@@ -188,8 +181,7 @@ Deployment はアプリケーションを更新するときに、後述のロー
 Deployment では基本的にローリングアップデートでアプリケーションが順次更新されるため、ダウンタイムなしにアプリケーションを更新することができます。
 ローリングアップデートのデモ用マニフェストは以下の通りです。
 
-<details>
-<summary><b>rolling-update-deployment.yaml</b></summary>
+<b>rolling-update-deployment.yaml</b>
 
 ```yaml
 apiVersion: apps/v1
@@ -221,8 +213,6 @@ spec:
           image: rhanafusa/hello-app:1.0
 ```
 
-</details>
-
 それではローリングアップデートを体験してみましょう。  
 以下のシェルスクリプトを実行してローリングアップデートされていく様子を確認することができます。
 
@@ -247,8 +237,7 @@ watch kubectl get replicaset
 
 レプリカの数は手動で変更することもできますが、以下のようにマニフェストを設定することで Pod の負荷状況に応じて自動でスケールアウトすることができます。
 
-<details>
-<summary><b>autoscale-example.yaml</b></summary>
+<b>autoscale-example.yaml</b>
 
 ```yaml
 ## HorizontalAutoscalerの設定
@@ -287,15 +276,12 @@ spec:
           image: rhanafusa/hello-app:1.0
 ```
 
-</details>
-
 ## Service を作成してみる
 
 Kubernetes 上のアプリケーションを外部に公開するには Service (もしくは Ingress) というリソースを使います。  
 以下は負荷分散のためのシンプルなロードバランサーの Service の例です。
 
-<details>
-<summary><b>service-example.yaml</b></summary>
+<b>service-example.yaml</b>
 
 ```yaml
 ## シンプルなServiceの定義
@@ -336,8 +322,6 @@ spec:
           ports:
             - containerPort: 8080
 ```
-
-</details>
 
 適用
 
