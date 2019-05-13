@@ -180,7 +180,7 @@ spec:
 </details>
 
 Deployment はアプリケーションを更新するときに、後述のローリングアップデートやオートスケーリングなどのデプロイに関する設定を記述することができる。  
-よって、Deployment のマニフェストは ReplicaSet や Pod のマニフェストを上記のように個別に書くということは基本的にはありません。
+よって、**基本的には Pod や ReplicaSet は Deployment を通して定義すればよいです(Deployment のマニフェストファイルだけ作れば OK)。**
 
 ### Deployment のローリングアップデートを試してみる
 
