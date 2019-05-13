@@ -9,13 +9,16 @@
 <img width="1440" alt="スクリーンショット 2019-05-13 13 01 45" src="https://user-images.githubusercontent.com/25437304/57611035-f06cd600-75ac-11e9-8bb1-d8483394065b.png">
 
 ```bash
-# Datadog Agentを作成する
+# Datadog AgentがKubernetes監視に必要なロールベースアクセス制御(RBAC)、RBACの権限を設定するServiceAccount、ClusterRoleBindingを作成する
 kubectl create -f "https://raw.githubusercontent.com/DataDog/datadog-agent/master/Dockerfiles/manifests/rbac/clusterrole.yaml"
 kubectl create -f "https://raw.githubusercontent.com/DataDog/datadog-agent/master/Dockerfiles/manifests/rbac/serviceaccount.yaml"
 kubectl create -f "https://raw.githubusercontent.com/DataDog/datadog-agent/master/Dockerfiles/manifests/rbac/clusterrolebinding.yaml"
 
 # Datadog Agentに必要なapi-keyをSecretリソースで作成する
 kubectl create secret generic datadog-secret --from-literal api-key="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# Datadog Agent(DaemonSet)を作成する
+kubectl create -f 
 ```
 
 Datadog Agentを作成してしばらく待つとアカウント作成を完了できます。  
