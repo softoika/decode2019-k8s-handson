@@ -353,7 +353,7 @@ kubectl get services --watch
 
 <img width="528" alt="kubectl_get_services_--watch" src="https://user-images.githubusercontent.com/25437304/57521051-33833b00-735a-11e9-862e-5d9e82168638.png">
 
-EXTERNAL-IP が実 IP になったら、ブラウザでアクセスしてみましょう。(`http://<EXTERNAL-IP>:8080`でアクセスできます。)
+EXTERNAL-IP が実 IP になったら、ブラウザでアクセスしてみましょう。(`http://<EXTERNAL-IP>:8080/greeting`でアクセスできます。)
 
 ## 後片付け
 
