@@ -88,6 +88,23 @@ kubectl get pods
 
 STATUS が Running になったら起動成功
 
+### (おまけ) その他よく使うコマンド
+```bash
+# yamlに何を記述できるかコマンドで確認する
+kubectl explain pod
+kubectl explain pod.spec
+kubectl explain pod.spec.containers.ports
+# podの詳細や起動履歴を確認する
+kubectl describe pods
+# アプリケーションのログを確認する
+kubectl logs pod-example
+# podの中に入る(pod内で有効なコマンドを実行する)
+kubectl exec -it pod-example -- bash
+kubectl exec -it pod-example -- uname -a
+```
+その他コマンドの詳細を知りたければ`kubectl -h`または`kubectl サブコマンド -h`でみれます。  
+また、公式でコマンドの[リファレンス](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)が公開されています。
+
 ## ReplicaSet を作成してみる
 <img width="732" alt="スクリーンショット 2019-05-30 10 45 03" src="https://user-images.githubusercontent.com/25437304/58602503-2fe33400-82c8-11e9-8d90-8274f923155b.png">
 
