@@ -48,6 +48,7 @@ az aks get-credentials --name k8s-handson --resource-group decode2019-cd65-71
 ```
 
 ## Pod を作成してみる
+<img width="695" alt="スクリーンショット 2019-05-30 10 44 54" src="https://user-images.githubusercontent.com/25437304/58602484-1f32be00-82c8-11e9-8b7b-725bcd4cced5.png">
 
 Pod は Kubernetes における最小単位の環境です。  
 Pod は 1 つ以上のコンテナを動かす環境で、複数のコンテナを動かす場合同じ Pod 内であれば コンテナは localhost で互いに通信することができます。  
@@ -88,6 +89,8 @@ kubectl get pods
 STATUS が Running になったら起動成功
 
 ## ReplicaSet を作成してみる
+<img width="732" alt="スクリーンショット 2019-05-30 10 45 03" src="https://user-images.githubusercontent.com/25437304/58602503-2fe33400-82c8-11e9-8d90-8274f923155b.png">
+
 
 ReplicaSet はその名の通り、Pod のレプリケーションを組んで可用性を高めることができます。  
 以下は 3 つのレプリカで構成された ReplicaSet の例です。
@@ -152,6 +155,7 @@ ReplicaSet を組んでいれば Pod に障害が起きて停止しても、す�
 <img width="473" alt="self-healing-demo sh" src="https://user-images.githubusercontent.com/25437304/57521023-1d757a80-735a-11e9-9310-820067c34265.png">
 
 ## Deployment を作成してみる
+<img width="723" alt="スクリーンショット 2019-05-30 10 45 13" src="https://user-images.githubusercontent.com/25437304/58602517-3d002300-82c8-11e9-94b4-d58c7e06fb91.png">
 
 Deployment は ReplicaSet をスケーラブルに扱うためのリソース。
 
@@ -290,6 +294,7 @@ spec:
 </details>
 
 ## Service を作成してみる
+<img width="778" alt="スクリーンショット 2019-05-30 10 45 30" src="https://user-images.githubusercontent.com/25437304/58602547-51dcb680-82c8-11e9-9361-26c452084add.png">
 
 Kubernetes 上のアプリケーションを外部に公開するには Service (もしくは Ingress) というリソースを使います。  
 以下は負荷分散のためのシンプルなロードバランサーの Service の例です。
